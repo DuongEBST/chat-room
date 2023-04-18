@@ -1,0 +1,33 @@
+.message-popup-container{
+    position: absolute;
+    background: var(--color-gray);
+    width: calc(100% - 110px);
+    border-radius: 5px;
+    top: -86px;
+    height: 100px;
+}
+
+.message-popup-contain{
+    padding: 10px;
+    display: flex;
+    overflow: hidden;
+}
+
+.img-box{
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-left: 5px;
+}
+
+.img-content{
+    width: 100%;
+    height: 100%;
+}
+
+.delete-img{
+    position: absolute;
+    top: -6px;
+    right: -6px;
+}
+

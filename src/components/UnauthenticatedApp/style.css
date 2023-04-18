@@ -1,0 +1,10 @@
+.login-button {
+    background: var(--color-blue);
+    padding: 16px;
+}
+
+.login{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}

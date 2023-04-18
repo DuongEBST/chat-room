@@ -1,0 +1,31 @@
+.message-input-container {
+    display: flex;
+    gap: 4px;
+    padding: 10px;
+    align-items: center;
+    position: relative;
+}
+
+.message-input {
+    padding: 12px 8px;
+    flex: 1;
+    background: var(--color-gray);
+    border-radius: var(--border-radius);
+    height: 30px;
+    font-size: 0.8rem;
+}
+
+
+.send-message {
+    background: var(--color-blue);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    height: 30px;
+    font-size: 0.8rem;
+}
+
+.img-button{
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
