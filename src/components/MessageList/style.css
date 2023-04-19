@@ -2,6 +2,7 @@
     margin-bottom: 16px;
     flex: 1;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .message-list-container::-webkit-scrollbar{
@@ -59,11 +60,18 @@
     float: right;
 }
 
-.message-img{
+.message-item{
+    height: 200px;
     width: 100%;
     display: flex;
 }
 
-.message-container.own .message-img{
+.message-container.own .message-item{
     justify-content: flex-end;
+}
+
+.mes-img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

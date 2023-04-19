@@ -1,23 +1,40 @@
 .message-popup-container{
     position: absolute;
     background: var(--color-gray);
-    width: calc(100% - 110px);
+    width: calc(100% - 113px);
     border-radius: 5px;
-    top: -86px;
+    top: -90px;
     height: 100px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.message-popup-container::-webkit-scrollbar{
+    height: 6px;
+}
+
+.message-popup-container::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+
+.message-popup-container::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+    border-radius: 10px;
 }
 
 .message-popup-contain{
     padding: 10px;
     display: flex;
-    overflow: hidden;
 }
 
 .img-box{
     position: relative;
     width: 80px;
     height: 80px;
-    margin-left: 5px;
+    margin-right: 10px;
+    flex: 0 0 auto;
 }
 
 .img-content{
@@ -29,5 +46,10 @@
     position: absolute;
     top: -6px;
     right: -6px;
+}
+
+.delete-btn{
+    background: #fff !important;
+    font-size: 10px !important;
 }
 

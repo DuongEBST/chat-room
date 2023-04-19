@@ -34,7 +34,8 @@ const loginWithGoogle = async () => {
     }
 }
 
-const sendMessage = async (roomId, user, text, image) => {
+const sendMessage = async (roomId, user, text, files) => {
+    console.log("fie", files)
     try {
         let document = {
             uid: user.uid,
@@ -45,31 +46,39 @@ const sendMessage = async (roomId, user, text, image) => {
 
         if(text){
             document.text = text.trim()
+            await addDoc(collection(db, 'chat-rooms', roomId, 'messages'), document)
+            delete document.text
         }
 
-        if(image){
-            const storageRef = ref(storage, uuid())
-            const uploadTask = uploadBytesResumable(storageRef, image)
+        if(files?.length > 0){
+            let newFiles = files.map(item => item.file)
+            newFiles.map(fileItem => {
+                const storageRef = ref(storage, uuid())
+                const uploadTask = uploadBytesResumable(storageRef, fileItem)
+    
+                uploadTask.on(
+                    'state_changed',
+                    (snapshot) => {
+                        const progress =
+                          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                          console.log('progress', progress)
+                      },
+                    (error) => {
+                       //hanlde error 
+                       console.log("errr", error)
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                            fileItem?.type.includes("image") ? document.img = downloadURL : document.video = downloadURL
+                           
+                            await addDoc(collection(db, 'chat-rooms', roomId, 'messages'), document)
 
-            uploadTask.on(
-                'state_changed',
-                (snapshot) => {
-                    const progress =
-                      Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                      console.log('progress', progress)
-                  },
-                (error) => {
-                   //hanlde error 
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                        document.img = downloadURL
-                        await addDoc(collection(db, 'chat-rooms', roomId, 'messages'), document)
-                    })
-                }
-            )
-        }else{
-            await addDoc(collection(db, 'chat-rooms', roomId, 'messages'), document)
+                            document.img && delete document.img
+                            document.video && delete document.video
+                        })
+                    }
+                )
+            })
         }
     } catch (error) {
         console.error(error);
@@ -77,7 +86,6 @@ const sendMessage = async (roomId, user, text, image) => {
 }
 
 const getMessages = (roomId, callback) => {
-    console.log("vào")
     return onSnapshot(
         query(
             collection(db, 'chat-rooms', roomId, 'messages'),
@@ -89,7 +97,6 @@ const getMessages = (roomId, callback) => {
                 ...doc.data()
             }))
 
-            console.log("messages", messages)
             callback(messages)
         }
     )

@@ -32,7 +32,13 @@ const MessageList = ({roomId}) => {
 }
 
 const Message = ({message, isOwnMessage, avartar}) => {
-    const {text, img} = message
+
+    const viewFileDetail = (imgUrl) => {
+        window.open(imgUrl, '_blank', 'noreferrer')
+    }
+
+    const {text, img, video} = message
+    
     return (
         // <div className={['message', isOwnMessage && 'own-message'].join(' ')}>
         //     <h4 className="sender">{isOwnMessage ? 'You' : displayName}</h4>
@@ -50,8 +56,16 @@ const Message = ({message, isOwnMessage, avartar}) => {
                     </div>
                 }    
                 {img && 
-                    <div className='message-img'>
-                        <img src={img} alt="" width="50%"/>
+                    <div className='message-item' onClick={(e) => viewFileDetail(img)}>
+                        <img src={img} alt="" className='mes-img'/>
+                    </div>
+                }
+
+                {video && 
+                    <div className='message-item' onClick={(e) => viewFileDetail(video)}>
+                        <video controls>
+                            <source src={video}/>
+                        </video>
                     </div>
                 }
             </div>

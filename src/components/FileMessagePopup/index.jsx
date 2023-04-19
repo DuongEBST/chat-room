@@ -3,15 +3,20 @@ import "./styles.css"
 import ClearIcon from '@mui/icons-material/Clear';
 import { IconButton } from '@mui/material'
 
-const FileMessagePopup = ({imgs, deleteImg}) => {
+const FileMessagePopup = ({filesPreview, deleteImg}) => {
   return (
     <div className='message-popup-container'>
         <div className='message-popup-contain'>
-            {imgs?.length > 0 && imgs.map(item => (
+            {filesPreview?.length > 0 && filesPreview.map(item => (
                 <div className='img-box' key={item?.id}>
-                    <img src={item?.img} className='img-content'/>
+                    {item?.type.includes('image') && <img src={item?.file} className='img-content'/>}
+                    {item?.type.includes('video') &&
+                        <video controls className='img-content'>
+                            <source src={item.file}/>
+                        </video>
+                    }
                     <div className='delete-img'>
-                        <IconButton aria-label="delete" size="small" onClick={(e) => deleteImg(item)}>
+                        <IconButton aria-label="delete" size="small" onClick={(e) => deleteImg(item)} className='delete-btn'>
                             <ClearIcon fontSize="inherit" color="error"/>
                         </IconButton>
                     </div>

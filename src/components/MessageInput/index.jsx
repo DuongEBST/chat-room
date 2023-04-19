@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import SendIcon from '@mui/icons-material/Send';
 import { v4 as uuid } from "uuid";
 import { useAuth } from '../../hooks/useAuth'
@@ -12,55 +14,83 @@ const MessageInput = ({ roomId }) => {
     // const { user } = useAuth();
     const user = JSON.parse(sessionStorage.getItem('user'))
     const [value, setValue] = useState('');
-    const [image, setImage] = useState(null)
-    const [imgsPreview, setImgsReview] = useState([])
+    const [files, setFiles] = useState([])
+    const [filesPreview, setFilesPreview] = useState([])
 
     const handleChange = (event) => {
         setValue(event.target.value);
     };
 
-    const handleChangeImg = (e) => {
+    const handleChangeFile = (e) => {
         if(e){
-            setImage(e.target.files[0])
-            setImgsReview([...imgsPreview, {id: uuid(), img: URL.createObjectURL(e.target.files[0])}])
+            let newFiles = files.length > 0 ? [...files] : []
+            let newFilesPreview = filesPreview.length > 0 ? [...filesPreview] : []
+            for(let file of e.target.files){
+                let id = uuid()
+                newFiles.push({
+                    id: id,
+                    file: file
+                })
+                newFilesPreview.push({
+                    id: id,
+                    file: URL.createObjectURL(file),
+                    type: file.type
+                })
+            }
+            
+            setFiles(newFiles)
+            setFilesPreview(newFilesPreview)
         }
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        sendMessage(roomId, user, value, image);
+        sendMessage(roomId, user, value, files);
         setValue('');
-        setImage(null)
-        setImgsReview([])
+        setFiles([])
+        setFilesPreview([])
     };
 
-    const deletePreviewImg = (img) => {
-        let newImgsPreview = imgsPreview.filter(item => item.id !== img.id)
+    const deletePreviewFile = (file) => {
+        let newFilesPreview = filesPreview.filter(item => item.id !== file.id)
+        let newFiles = files.filter(item => item.id !== file.id)
 
-        setImgsReview(newImgsPreview)
+        setFilesPreview(newFilesPreview)
+        setFiles(newFiles)
     }
 
     return (
         <form onSubmit={handleSubmit} className="message-input-container">
-            {imgsPreview.length > 0 && <FileMessagePopup imgs={imgsPreview} deleteImg={deletePreviewImg}/>}
+            {filesPreview.length >  0 && <FileMessagePopup filesPreview={filesPreview} deleteImg={deletePreviewFile}/>}
             <input
                 type="text"
                 placeholder="Enter a message"
                 value={value}
                 onChange={handleChange}
                 className="message-input"
-                required
-                minLength={0}
             />
-            <IconButton color="primary" aria-label="upload picture" component="label" onChange={handleChangeImg}>
-                <input hidden accept="image/*" type="file" />
-                <PhotoCameraIcon />
-            </IconButton>
+            <div >
+                <IconButton color="primary" aria-label="upload picture" className='btn' component="label" onChange={handleChangeFile}>
+                    <input hidden accept="image/*" type="file" multiple/>
+                    <CameraAltIcon />
+                </IconButton>
 
-            <IconButton color="primary" type="submit" > {/*disabled={value < 1 || !image}*/}
-                <input hidden accept="image/*" type="file" />
-                <SendIcon />
-            </IconButton>
+                <IconButton color="primary" aria-label="upload picture" className='btn' component="label" onChange={handleChangeFile}>
+                    <input hidden accept="video/*" type="file" multiple/>
+                    <OndemandVideoIcon fontSize='medium'/>
+                </IconButton>
+
+                <IconButton 
+                    color="primary" 
+                    type="submit" 
+                    className='btn' 
+                    component="label" 
+                    disabled={!value && files.length === 0}
+                    onClick={handleSubmit}
+                >
+                    <SendIcon />
+                </IconButton>
+            </div>
             
             {/* <button type="submit" disabled={value < 1} className="send-message">
                 Send

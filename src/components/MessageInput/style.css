@@ -13,6 +13,7 @@
     border-radius: var(--border-radius);
     height: 30px;
     font-size: 0.8rem;
+    outline: none;
 }
 
 
@@ -24,8 +25,6 @@
     font-size: 0.8rem;
 }
 
-.img-button{
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
+.btn{
+   padding: 0 3px !important;
 }
