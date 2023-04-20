@@ -9,10 +9,10 @@ const FileMessagePopup = ({filesPreview, deleteImg}) => {
         <div className='message-popup-contain'>
             {filesPreview?.length > 0 && filesPreview.map(item => (
                 <div className='img-box' key={item?.id}>
-                    {item?.type.includes('image') && <img src={item?.file} className='img-content'/>}
+                    {item?.type.includes('image') && <img src={item?.previewUrl} className='img-content'/>}
                     {item?.type.includes('video') &&
                         <video controls className='img-content'>
-                            <source src={item.file}/>
+                            <source src={item.previewUrl}/>
                         </video>
                     }
                     <div className='delete-img'>

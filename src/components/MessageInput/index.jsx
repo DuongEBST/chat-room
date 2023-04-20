@@ -15,7 +15,6 @@ const MessageInput = ({ roomId }) => {
     const user = JSON.parse(sessionStorage.getItem('user'))
     const [value, setValue] = useState('');
     const [files, setFiles] = useState([])
-    const [filesPreview, setFilesPreview] = useState([])
 
     const handleChange = (event) => {
         setValue(event.target.value);
@@ -24,22 +23,18 @@ const MessageInput = ({ roomId }) => {
     const handleChangeFile = (e) => {
         if(e){
             let newFiles = files.length > 0 ? [...files] : []
-            let newFilesPreview = filesPreview.length > 0 ? [...filesPreview] : []
+        
             for(let file of e.target.files){
-                let id = uuid()
                 newFiles.push({
-                    id: id,
-                    file: file
+                    id: uuid(),
+                    file: file,
+                    type: file.type,
+                    previewUrl: URL.createObjectURL(file),
                 })
-                newFilesPreview.push({
-                    id: id,
-                    file: URL.createObjectURL(file),
-                    type: file.type
-                })
+
             }
             
             setFiles(newFiles)
-            setFilesPreview(newFilesPreview)
         }
     }
 
@@ -48,20 +43,17 @@ const MessageInput = ({ roomId }) => {
         sendMessage(roomId, user, value, files);
         setValue('');
         setFiles([])
-        setFilesPreview([])
     };
 
     const deletePreviewFile = (file) => {
-        let newFilesPreview = filesPreview.filter(item => item.id !== file.id)
         let newFiles = files.filter(item => item.id !== file.id)
 
-        setFilesPreview(newFilesPreview)
         setFiles(newFiles)
     }
 
     return (
         <form onSubmit={handleSubmit} className="message-input-container">
-            {filesPreview.length >  0 && <FileMessagePopup filesPreview={filesPreview} deleteImg={deletePreviewFile}/>}
+            {files.length >  0 && <FileMessagePopup filesPreview={files} deleteImg={deletePreviewFile}/>}
             <input
                 type="text"
                 placeholder="Enter a message"
