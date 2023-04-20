@@ -8,6 +8,7 @@ const MessageList = ({roomId}) => {
     // const {user} = useAuth()
     const user = JSON.parse(sessionStorage.getItem("user"))
     const messages = useMessages(roomId)
+    console.log("messages ", messages)
 
     useLayoutEffect(() => {
         if(containerRef.current){

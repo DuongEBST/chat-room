@@ -26,6 +26,11 @@
     padding: 5px;
 }
 
+.message-list{
+    display: flex;
+    flex-direction: column;
+}
+
 .avatar{
     width: 20px;
     height: 20px;
@@ -39,10 +44,10 @@
 
 .message-content{
     margin-top: 8px;
+    width: 80%;
 }
 
 .message-container.own{
-    display: flex;
     justify-content: flex-end;
 }
 

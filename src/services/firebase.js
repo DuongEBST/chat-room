@@ -35,7 +35,6 @@ const loginWithGoogle = async () => {
 }
 
 const sendMessage = async (roomId, user, text, files) => {
-    console.log("fie", files)
     try {
         let document = {
             uid: user.uid,
