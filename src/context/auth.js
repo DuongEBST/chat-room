@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { loginWithGoogle } from "../services/firebase";
+import { loginWithGoogle, loginWithNormalUser } from "../services/firebase";
 import { useState } from "react";
 
 const AuthContext = createContext()
@@ -7,8 +7,15 @@ const AuthContext = createContext()
 const AuthProvider = (props) => {
     const [user, setUser] = useState(null)
 
-    const login = async () => {
-        const authenticationUser = await loginWithGoogle()
+    const login = async (props) => {
+        console.log("props", props)
+        let authenticationUser
+        if(props?.uid){
+            authenticationUser = await loginWithNormalUser(props)
+        }else{
+            authenticationUser = await loginWithGoogle()
+        }
+        
 
         if(!authenticationUser){
 

@@ -9,7 +9,7 @@ const UnauthenticatedApp = () => {
     return (
         <div>
             <h2>Log in to join a chat room!</h2>
-            <LoginForm />
+            <LoginForm login={login}/>
             <div className='login'>
                 <button onClick={login} className="login-button">
                     Login with Google

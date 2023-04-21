@@ -2,13 +2,15 @@ import React, { useState } from 'react'
 import { v4 as uuid } from "uuid";
 import { loginWithNormalUser } from '../../services/firebase';
 
-const LoginForm = () => {
-    const [user, setUser] = useState({
-        uid: "",
-        displayName: "",
-        avatar: "",
-        file: null
-    })
+const userObject = {
+    uid: "",
+    displayName: "",
+    avatarPreview: "",
+    file: null,
+}
+
+const LoginForm = ({login}) => {
+    const [user, setUser] = useState(userObject)
 
     const handleChange = (e) => {
         setUser({
@@ -28,12 +30,8 @@ const LoginForm = () => {
 
     const hanldeSubmit = (e) => {
         e.preventDefault();
-        loginWithNormalUser(user)
-        setUser({
-            uid: "",
-            displayName: "",
-            avatar: ""
-        })
+        login(user)
+        setUser(userObject)
     }   
 
     return (

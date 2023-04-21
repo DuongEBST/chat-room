@@ -70,7 +70,8 @@ const loginWithNormalUser = async (user) => {
         const data = await getDoc(doc(db, 'users', user.uid))
       
         if(data.exists()){
-            sessionStorage.setItem('user', JSON.stringify(data.data()))
+            return data.data()
+            // sessionStorage.setItem('user', JSON.stringify(data.data()))
         }
     } catch (error) {
        
