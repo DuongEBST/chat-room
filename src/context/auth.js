@@ -10,7 +10,10 @@ const AuthProvider = (props) => {
     const login = async (props) => {
         console.log("props", props)
         let authenticationUser
+
         if(props?.uid){
+            authenticationUser = props
+        }else if(props?.displayName){
             authenticationUser = await loginWithNormalUser(props)
         }else{
             authenticationUser = await loginWithGoogle()

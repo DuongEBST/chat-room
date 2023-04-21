@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 const Landing = () => {
   return (
     <div>
-        <h2>Choose a Chat Room</h2>
+        <h2 style={{textAlign: "center", margin: "10px"}}>Choose a Chat Room</h2>
         <ul className="chat-room-list">
             {chatRooms.map(room => (
                 <li key={room.id}>

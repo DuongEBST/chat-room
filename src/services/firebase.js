@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth"
-import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, setDoc, getDoc, doc } from "firebase/firestore"
+import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, setDoc, getDoc, doc, getDocs } from "firebase/firestore"
 import {getDownloadURL, ref, uploadBytesResumable, getStorage} from "firebase/storage"
 import { v4 as uuid } from "uuid";
 
@@ -62,8 +62,11 @@ const loginWithNormalUser = async (user) => {
             user.avatar = downloadURL;
 
             delete user.file
-            user.avatarPreview && delete user.avatarPreview
         }
+
+        user.avatarPreview && delete user.avatarPreview
+        user.rePassword && delete user.rePassword
+        user.uid = uuid()
       
         await setDoc(doc(db, "users", user.uid), user);
 
@@ -127,4 +130,11 @@ const getMessages = (roomId, callback) => {
     )
 }
 
-export { loginWithGoogle, sendMessage, getMessages, loginWithNormalUser };
+const getAllUser = async () => {
+    const snapshot = await getDocs(collection(db, 'users'))
+    const uers = snapshot.docs.map((doc) => doc.data());
+
+    return uers
+}
+
+export { loginWithGoogle, sendMessage, getMessages, loginWithNormalUser, getAllUser };

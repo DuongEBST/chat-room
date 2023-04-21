@@ -1,0 +1,70 @@
+.form-container{
+    display: flex;
+    background: #888686;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 20px;
+    border-radius: 5px;
+    /* box-shadow: -1px -1px 0px 2px rgba(237,232,234,0.28); */
+    border: 1px solid #aca8a8;
+    width: 370px;
+}
+
+.form-container .form-title{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-container .img-field{
+    display: none;
+}
+
+.form-container .avatar-container{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.form-container .avatar-container .avatar-form{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid #d3d1d1
+}
+
+.form-container .form-input-layout{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.form-container .form-input-layout .input-field{
+    padding: 8px 10px;
+    background: var(--color-gray);
+    margin-bottom: 3px;
+    width: 100%;
+}
+
+.form-container .form-btn{
+    background: #262d64;
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 10px;
+}
+
+.form-container .form-btn.gg{
+    background: hsl(208deg 89.15% 18.87%);
+    margin-top: 10px;
+}
+
+.form-container p span{
+    text-decoration: underline;
+    cursor: pointer;
+    color: #220562;
+    text-align: center;
+    margin-left: 2px;
+}
