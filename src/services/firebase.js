@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth"
-import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy } from "firebase/firestore"
+import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, setDoc, getDoc, doc } from "firebase/firestore"
 import {getDownloadURL, ref, uploadBytesResumable, getStorage} from "firebase/storage"
 import { v4 as uuid } from "uuid";
 
@@ -34,6 +34,49 @@ const loginWithGoogle = async () => {
     }
 }
 
+const uploadFileToFirebase = async (file) => {
+    const storageRef = ref(storage, uuid());
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            console.log("progress", progress);
+        },
+        (error) => {
+            console.error("Failed to upload avatar:", error);
+            throw error;
+        }
+    );
+
+    await uploadTask;
+    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+    return downloadURL;
+}
+
+const loginWithNormalUser = async (user) => {
+    try {
+        if (user.file) {
+            const downloadURL = await uploadFileToFirebase(user?.file);
+            user.avatar = downloadURL;
+
+            delete user.file
+            user.avatarPreview && delete user.avatarPreview
+        }
+      
+        await setDoc(doc(db, "users", user.uid), user);
+
+        const data = await getDoc(doc(db, 'users', user.uid))
+      
+        if(data.exists()){
+            sessionStorage.setItem('user', JSON.stringify(data.data()))
+        }
+    } catch (error) {
+       
+    }
+}
+
 const sendMessage = async (roomId, user, text, files) => {
     try {
         let document = {
@@ -51,32 +94,14 @@ const sendMessage = async (roomId, user, text, files) => {
 
         if(files?.length > 0){
             let newFiles = files.map(item => item.file)
-            newFiles.map(fileItem => {
-                const storageRef = ref(storage, uuid())
-                const uploadTask = uploadBytesResumable(storageRef, fileItem)
-    
-                uploadTask.on(
-                    'state_changed',
-                    (snapshot) => {
-                        const progress =
-                          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                          console.log('progress', progress)
-                      },
-                    (error) => {
-                       //hanlde error 
-                       console.log("errr", error)
-                    },
-                    () => {
-                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                            fileItem?.type.includes("image") ? document.img = downloadURL : document.video = downloadURL
-                           
-                            await addDoc(collection(db, 'chat-rooms', roomId, 'messages'), document)
+            newFiles.map(async (fileItem) => {
+                const downloadURL = await uploadFileToFirebase(fileItem);
+                fileItem?.type.includes("image") ? document.img = downloadURL : document.video = downloadURL
+               
+                await addDoc(collection(db, 'chat-rooms', roomId, 'messages'), document)
 
-                            document.img && delete document.img
-                            document.video && delete document.video
-                        })
-                    }
-                )
+                document.img && delete document.img
+                document.video && delete document.video
             })
         }
     } catch (error) {
@@ -101,4 +126,4 @@ const getMessages = (roomId, callback) => {
     )
 }
 
-export { loginWithGoogle, sendMessage, getMessages };
+export { loginWithGoogle, sendMessage, getMessages, loginWithNormalUser };

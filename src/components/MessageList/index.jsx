@@ -49,7 +49,7 @@ const Message = ({message, isOwnMessage, avartar}) => {
         //     </div>        
         // </div>
         <div className={`message-container ${isOwnMessage && "own"}`}>        
-            <img src={avartar} className='avatar'/>
+            <img src={avartar ? avartar : "/img/user.png"} className='avatar'/>
             <div className='message-content'>
                 {text &&
                     <div className="message-text">
