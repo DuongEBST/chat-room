@@ -93,11 +93,12 @@ const UnauthenticatedApp = () => {
     const checkExistUser = async () => {
         try {
             let allUser = await getAllUser()
+          
             let userData = null
             for (let item of allUser) {
                 if (item?.displayName?.localeCompare(user.displayName) === 0 && item?.password?.localeCompare(user.password) === 0) {
                     userData = item
-                    return
+                    break
                 }
             }
 

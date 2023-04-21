@@ -60,12 +60,11 @@ const loginWithNormalUser = async (user) => {
         if (user.file) {
             const downloadURL = await uploadFileToFirebase(user?.file);
             user.avatar = downloadURL;
-
-            delete user.file
         }
 
-        user.avatarPreview && delete user.avatarPreview
-        user.rePassword && delete user.rePassword
+        user.hasOwnProperty('file') && delete user.file
+        user.hasOwnProperty('avatarPreview') && delete user.avatarPreview
+        user.hasOwnProperty('rePassword') && delete user.rePassword
         user.uid = uuid()
       
         await setDoc(doc(db, "users", user.uid), user);
