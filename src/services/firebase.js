@@ -86,7 +86,10 @@ const sendMessage = async (roomId, user, text, files) => {
             uid: user.uid,
             displayName: user.displayName,
             timestamp: serverTimestamp(),
-            avartar: user?.avatar
+        }
+
+        if(user?.avatar){
+            document.avatar = user?.avatar 
         }
 
         if(text){
