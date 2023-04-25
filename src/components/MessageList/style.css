@@ -64,6 +64,29 @@
     cursor: pointer;
 }
 
+.message-container .message-content .message-text-container{
+    display: flex;
+    align-items: center;
+}
+
+.message-container.own .message-content .message-text-container{
+   justify-content: flex-end;
+}
+
+.message-container .message-content .message-text-container .pencil-icon{
+    font-size: 14px;
+    margin-left: 10px;
+    opacity: 0.3;
+}
+
+.message-container.own .message-content .message-text-container .pencil-icon{
+    margin-right: 10px;
+}
+
+.message-container .message-content .message-text-container .pencil-icon.not-own{
+    order: 2;
+}
+
 .message-container.own .message-text{
     background: var(--color-blue);
     float: right;
