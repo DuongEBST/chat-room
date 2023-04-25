@@ -3,7 +3,7 @@ import { useAuth } from '../../hooks/useAuth'
 import useMessages from '../../hooks/useMessages'
 import "./style.css"
 
-const MessageList = ({roomId}) => {
+const MessageList = ({roomId, getEditMessage}) => {
     const containerRef = useRef(null)
     // const {user} = useAuth()
     const user = JSON.parse(sessionStorage.getItem("user"))
@@ -25,6 +25,7 @@ const MessageList = ({roomId}) => {
                         message={item}
                         isOwnMessage={item.uid === user.uid}
                         avartar={item.avartar}
+                        getEditMessage={getEditMessage}
                     />
                 ))}
             </div>
@@ -32,7 +33,7 @@ const MessageList = ({roomId}) => {
     )
 }
 
-const Message = ({message, isOwnMessage, avartar}) => {
+const Message = ({message, isOwnMessage, avartar, getEditMessage}) => {
 
     const viewFileDetail = (imgUrl) => {
         window.open(imgUrl, '_blank', 'noreferrer')
@@ -41,18 +42,11 @@ const Message = ({message, isOwnMessage, avartar}) => {
     const {text, img, video} = message
     
     return (
-        // <div className={['message', isOwnMessage && 'own-message'].join(' ')}>
-        //     <h4 className="sender">{isOwnMessage ? 'You' : displayName}</h4>
-        //     <p>{text}</p>     
-        //     <div style={{width: "50%", display: "inline-block"}}>
-        //         {img && <img src={img} alt="" className='img-message'/>} 
-        //     </div>        
-        // </div>
         <div className={`message-container ${isOwnMessage && "own"}`}>        
             <img src={avartar ? avartar : "/img/user.png"} className='avatar'/>
             <div className='message-content'>
                 {text &&
-                    <div className="message-text">
+                    <div className={`message-text ${isOwnMessage && 'edit'}`} onClick={(e) => getEditMessage(message, isOwnMessage)}>
                         {text}
                     </div>
                 }    

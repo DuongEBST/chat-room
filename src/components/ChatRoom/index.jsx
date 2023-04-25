@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { chatRooms } from '../../data/chatRoom'
 import "./style.css"
@@ -7,10 +7,17 @@ import MessageList from '../MessageList'
 
 const ChatRoom = () => {
   const params = useParams()
+  const [editMessage, setEditMessage] = useState(null)
 
   const room = chatRooms.find(x => x.id === params.id)
   if(!room){
 
+  }
+
+  const getEditMessage = (message, isOwnMessage) => {
+    if(isOwnMessage){
+      setEditMessage(message)
+    }
   }
 
   return (
@@ -22,8 +29,15 @@ const ChatRoom = () => {
         </div>
       </div>
       <div className="messages-container">
-        <MessageList roomId={room.id}/>
-        <MessageInput roomId={room.id} />
+        <MessageList 
+          roomId={room.id}
+          getEditMessage={getEditMessage}
+        />
+        <MessageInput 
+          roomId={room.id} 
+          editMessage={editMessage}
+          setEditMessage={setEditMessage}
+        />
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth"
-import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, setDoc, getDoc, doc, getDocs } from "firebase/firestore"
+import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, setDoc, getDoc, doc, getDocs, where, updateDoc } from "firebase/firestore"
 import {getDownloadURL, ref, uploadBytesResumable, getStorage} from "firebase/storage"
 import { v4 as uuid } from "uuid";
 
@@ -139,4 +139,57 @@ const getAllUser = async () => {
     return uers
 }
 
-export { loginWithGoogle, sendMessage, getMessages, loginWithNormalUser, getAllUser };
+const test = async () => {
+    //lấy 1 record message
+    //cách 1
+    // const messageRef = doc(db, 'chat-rooms', 'dogs', 'messages', 'JqWJwJgUNvRd9x8QRzoa');
+    // const messageSnapshot = await getDoc(messageRef);
+    // if (messageSnapshot.exists()) {
+    //     console.log('ffsdfsdf', messageSnapshot.data());
+    //     return messageSnapshot.data();
+    // } else {
+    //     console.log('No matching documents');
+    // }
+    //cách 2 uid of doc
+    // let test = query(collection(db, 'chat-rooms', 'dogs', 'messages'), where('uid', '==', 'JqWJwJgUNvRd9x8QRzoa'))
+    // const querySnapshot = await getDocs(test);
+    // if (querySnapshot.empty) {
+    //     console.log('No matching documents.');
+    // } else {
+    //     querySnapshot.forEach((doc) => {
+    //         console.log(doc.id, ' => ', doc.data());
+    //     });
+    // }
+    //cách 3 get theo id doc of subcollection
+    // const messageRef = doc(collection(db, 'chat-rooms', 'dogs', 'messages'), 'JqWJwJgUNvRd9x8QRzoa');
+    // const messageSnapshot = await getDoc(messageRef);
+    // if (messageSnapshot.exists()) {
+    //     console.log('Message data:', messageSnapshot.data());
+    // } else {
+    //     console.log('No such document!');
+    // }
+}
+
+const updateMessage = async (roomId, editMessage, text) => {
+    let oldMessage = editMessage.text
+    let messageId = editMessage.id
+    let oldTimestamp = editMessage?.oldValues ? editMessage.editedTimestamp : editMessage.timestamp
+
+    const messageRef = doc(db, 'chat-rooms', roomId, 'messages', messageId);
+
+    let oldValues = editMessage?.oldValues?.length > 0 ? [...editMessage.oldValues] : []
+    if(oldMessage){
+        oldValues.push({
+            text: oldMessage,
+            timestamp: oldTimestamp
+        })
+    }
+    
+    await updateDoc(messageRef, {
+        text: text,
+        oldValues: oldValues,
+        editedTimestamp: serverTimestamp()
+    })
+}
+
+export { loginWithGoogle, sendMessage, getMessages, loginWithNormalUser, getAllUser, updateMessage };

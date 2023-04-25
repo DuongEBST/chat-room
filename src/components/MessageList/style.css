@@ -60,6 +60,10 @@
     display: inline-block;
 }
 
+.message-container.own .message-content .message-text.edit{
+    cursor: pointer;
+}
+
 .message-container.own .message-text{
     background: var(--color-blue);
     float: right;
